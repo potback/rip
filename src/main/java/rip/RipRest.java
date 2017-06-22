@@ -2,6 +2,7 @@ package rip;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -37,6 +38,11 @@ public class RipRest {
 	public Response uploadFile(@MultipartForm FileUploadForm form) {
 
 		try {
+			// reset status
+			String statusFile = Configuration.getDataPath(context.getRealPath("")) + Configuration.getStatusFilename();
+			String status = "UPLOADED IMAGE at " + new Date().toString();
+			fileManager.writeFile(status.getBytes(), statusFile);
+
 			String filename = Configuration.getDataPath(context.getRealPath("")) + Configuration.getPngSrcFilename();
 			fileManager.writeFile(form.getData(), filename);
 
@@ -84,24 +90,22 @@ public class RipRest {
 
 	}
 
-	// @POST
-	// @Path("/status")
-	// @Consumes(MediaType.TEXT_PLAIN)
-	// @Produces(MediaType.TEXT_PLAIN)
-	// public Response saveStatus(String text) {
-	//
-	// String filename = Configuration.getDataPath() + "/tt.txt";
-	//
-	// try {
-	// writeFile(text.getBytes(), filename);
-	//
-	// System.out.println("Done saveText()");
-	//
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// return Response.status(200).entity("OKKK").build();
-	//
-	// }
+	@POST
+	@Path("/status")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response saveStatus(String text) {
+		text += " - received at " + new Date().toString();
+		String filename = Configuration.getDataPath(context.getRealPath("")) + Configuration.getStatusFilename();
+		try {
+			fileManager.writeFile(text.getBytes(), filename);
 
+			System.out.println("Done saveStatus()");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return Response.status(200).entity("OKKK").build();
+
+	}
 }

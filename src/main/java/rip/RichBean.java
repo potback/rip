@@ -46,4 +46,20 @@ public class RichBean implements Serializable {
 		return content;
 
 	}
+
+	public String getStatus() {
+		String filename = Configuration
+				.getDataPath(FacesContext.getCurrentInstance().getExternalContext().getRealPath(""))
+				+ Configuration.getStatusFilename();
+		String content = "";
+		try {
+			content = fileManager.readFile(filename, StandardCharsets.UTF_8);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return "ERRO AO LER ARQUIVO " + filename;
+		}
+		System.out.println("Done getText()");
+		return content;
+
+	}
 }

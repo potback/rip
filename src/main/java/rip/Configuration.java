@@ -19,4 +19,8 @@ public class Configuration {
 	public static String getTextFilename() {
 		return "tt.txt";
 	}
+
+	public static String getStatusFilename() {
+		return "status.txt";
+	}
 }

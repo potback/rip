@@ -14,9 +14,12 @@
 		<ui:define name="body">
 			<form action="rest/img/savetext" method="post"
 				enctype="text/plain">
-
+			<h:graphicImage value="#{richBean.image}"/>
 				<p>
 					Text : <input type="text" name="text" size="50" />
+				</p>
+				<p>
+					<h:outputText value="#{richBean.status}" />
 				</p>
 
 				<input type="submit" value="Save It" />
