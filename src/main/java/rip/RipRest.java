@@ -1,12 +1,7 @@
 package rip;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -26,6 +21,8 @@ public class RipRest {
 	@Context
 	private ServletContext context;
 
+	FileManager fileManager = new FileManager();
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testGet() {
@@ -38,10 +35,10 @@ public class RipRest {
 	@Consumes("multipart/form-data")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response uploadFile(@MultipartForm FileUploadForm form) {
-		String filename = Configuration.getDataPath(context) + "/tt.png";
 
 		try {
-			writeFile(form.getData(), filename);
+			String filename = Configuration.getDataPath(context.getRealPath("")) + Configuration.getPngSrcFilename();
+			fileManager.writeFile(form.getData(), filename);
 
 			System.out.println("Done uploadFile()");
 
@@ -57,11 +54,9 @@ public class RipRest {
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response saveText(String text) {
-
-		String filename = Configuration.getDataPath(context) + "/tt.txt";
-
+		String filename = Configuration.getDataPath(context.getRealPath("")) + Configuration.getTextFilename();
 		try {
-			writeFile(text.getBytes(), filename);
+			fileManager.writeFile(text.getBytes(), filename);
 
 			System.out.println("Done saveText()");
 
@@ -76,12 +71,13 @@ public class RipRest {
 	@Path("/gettext")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getText() {
-		String filename = Configuration.getDataPath(context) + "/tt.txt";
+		String filename = Configuration.getDataPath(context.getRealPath("")) + Configuration.getTextFilename();
 		String content = "";
 		try {
-			content = readFile(filename, StandardCharsets.UTF_8);
+			content = fileManager.readFile(filename, StandardCharsets.UTF_8);
 		} catch (Exception e) {
-			return "ERRO AO LER ARQUIVO";
+			// e.printStackTrace();
+			return "ERRO AO LER ARQUIVO " + filename;
 		}
 		System.out.println("Done getText()");
 		return content;
@@ -94,7 +90,7 @@ public class RipRest {
 	// @Produces(MediaType.TEXT_PLAIN)
 	// public Response saveStatus(String text) {
 	//
-	// String filename = Configuration.getDataPath(context) + "/tt.txt";
+	// String filename = Configuration.getDataPath() + "/tt.txt";
 	//
 	// try {
 	// writeFile(text.getBytes(), filename);
@@ -108,25 +104,4 @@ public class RipRest {
 	//
 	// }
 
-	private void writeFile(byte[] content, String filename) throws IOException {
-
-		File file = new File(filename);
-		System.out.println("writing file: " + file.getAbsolutePath());
-
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-
-		FileOutputStream fop = new FileOutputStream(file);
-
-		fop.write(content);
-		fop.flush();
-		fop.close();
-
-	}
-
-	private String readFile(String path, Charset encoding) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
-		return new String(encoded, encoding);
-	}
 }
