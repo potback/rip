@@ -9,6 +9,7 @@ public class Configuration {
 		// String path =
 		// StringUtils.isEmpty(System.getenv("OPENSHIFT_DATA_DIR")) ? warPath
 		// : System.getenv("OPENSHIFT_DATA_DIR");
+		//
 		return context.getRealPath("/uploads");
 	}
 }
