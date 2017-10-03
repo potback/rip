@@ -51,7 +51,7 @@ public class RipRest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("OKKK").build();
+		return Response.status(200).entity("OKKKv2").build();
 
 	}
 
@@ -69,7 +69,7 @@ public class RipRest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("OKKK").build();
+		return Response.status(200).entity("OKKKv2").build();
 
 	}
 
@@ -105,7 +105,7 @@ public class RipRest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("OKKK").build();
+		return Response.status(200).entity("OKKKv2").build();
 
 	}
 }
